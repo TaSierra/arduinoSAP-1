@@ -10,7 +10,7 @@ int RXC = 3;
 #define PC_CLEAR        0b00000000
 #define PC_INC          0b00000001
 #define PC_to_MAR       0b00000010
-#define byte MAR_to_RAM 0b00000011
+#define MAR_to_RAM      0b00000011
 #define RAM_to_IR       0b00000100
 #define IR_to_MAR       0b00000101
 #define RAM_to_A        0b00000110
@@ -19,7 +19,7 @@ int RXC = 3;
 #define A_to_OUT        0b00001011
 #define ALU_to_A        0b00001100
 #define A_to_ALU        0b00011000
-#define byte B_to_ALU   0b00011100
+#define B_to_ALU   0b00011100
 
 #define CYCLE_LDA  0b0001
 #define CYCLE_LDB  0b0010
