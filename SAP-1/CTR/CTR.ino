@@ -7,23 +7,23 @@ int CLKpin = 2;
 int TXC = 4;
 int RXC = 3;
 
-const byte PC_CLEAR       = 0b00000000;
-const byte PC_INC         = 0b00000001; 
-const byte PC_to_MAR      = 0b00000010;
-const byte MAR_to_RAM     = 0b00000011;
-const byte RAM_to_IR      = 0b00000100;
-const byte IR_to_MAR      = 0b00000101;
-const byte RAM_to_A       = 0b00000110;
-const byte RAM_to_B       = 0b00000111;
-const byte ALU_ADD        = 0b00001001;
-const byte A_to_OUT       = 0b00001011;
-const byte ALU_to_A       = 0b00001100;
-const byte A_to_ALU       = 0b00011000;
-const byte B_to_ALU       = 0b00011100;
+#define PC_CLEAR        0b00000000
+#define PC_INC          0b00000001
+#define PC_to_MAR       0b00000010
+#define byte MAR_to_RAM 0b00000011
+#define RAM_to_IR       0b00000100
+#define IR_to_MAR       0b00000101
+#define RAM_to_A        0b00000110
+#define RAM_to_B        0b00000111
+#define ALU_ADD         0b00001001
+#define A_to_OUT        0b00001011
+#define ALU_to_A        0b00001100
+#define A_to_ALU        0b00011000
+#define byte B_to_ALU   0b00011100
 
-const byte CYCLE_LDA = 0b0001;
-const byte CYCLE_LDB = 0b0010;
-const byte CYCLE_ADD = 0b0011;
+#define CYCLE_LDA  0b0001
+#define CYCLE_LDB  0b0010
+#define CYCLE_ADD  0b0011
 
 byte stp = 0;
 bool lastCLK = LOW;
