@@ -2,33 +2,29 @@
 #include <util/delay.h>
 #include <NeoSWSerial.h>
 
-
-
-#define RXC 3   //RX_Command
-#define TXC 4   //TX_Command
-#define RXB 5   //RX_Bus
-#define TXB 6   //TX_Bus
+#define RXC PD3   //RX_Command
+#define TXC PD4   //TX_Command
+#define RXB PD5   //RX_Bus
+#define TXB PD6   //TX_Bus
 
 #define SB_SERIAL_HIGH_Z \
-    DDRB  &= ~((1 << TXB) | (1 << RXB)); \
-    PORTB &= ~((1 << TXB) | (1 << RXB));
+    DDRD  &= ~((1 << TXB) | (1 << RXB)); \
+    PORTD &= ~((1 << TXB) | (1 << RXB));
 
 #define SB_SERIAL_OUTPUT \
-    DDRB  |= ((1 << TXB) | (1 << RXB)); \
-    PORTB &= ~((1 << TXB) | (1 << RXB));
+    DDRD  |= ((1 << TXB) | (1 << RXB)); \
+    PORTD &= ~((1 << TXB) | (1 << RXB));
 
-#define SB_SERIAL_TXB_LOW PORTB &= ~(1 << TXB);
+#define SB_SERIAL_TXB_LOW PORTD &= ~(1 << TXB);
 
 
 #define SC_SERIAL_HIGH_Z \
-    DDRC  &= ~((1 << )); \
-    PORTC &= ~((1 << ));
+    DDRD  &= ~((1 << TXC) | (1 << RXC)); \
+    PORTD &= ~((1 << TXC) | (1 << RXC));
 
 #define SC_SERIAL_OUTPUT \
-    DDRC  |= ((1 << TXC) | (1 << RXC)); \
-    PORTC &= ~((1 << TXC) | (1 << RXC));
-
-
+    DDRD  |= ((1 << TXC) | (1 << RXC)); \
+    PORTD &= ~((1 << TXC) | (1 << RXC));
 
 #define H_SERIAL_HIGH_Z \
     DDRD  &= ~((1 << PD1) | (1 << PD0)); \
@@ -77,13 +73,13 @@ void setup() {
   busSerial.begin(19200);
   ctrSerial.begin(19200);
 
-  LED_OUTPUT();
-  SB_SERIAL_HIGH_Z();
-  SC_SERIAL_HIGH_Z();
-  H_SERIAL_HIGH_Z();
+  LED_OUTPUT;
+  SB_SERIAL_HIGH_;
+  SC_SERIAL_HIGH_Z;
+  H_SERIAL_HIGH_Z;
   
-  LED_LOW();
-  ctrSerial.listen();
+  LED_LOW;
+  ctrSerial.listen;
 }
 
 void loop() {
@@ -94,9 +90,9 @@ void loop() {
     
     dataToSend = ramMemory[address];
 
-    LED_HIGH();
+    LED_HIGH;
     _delay_ms(200);
-    LED_LOW();
+    LED_LOW;
   }
   
   if (ctrSerial.available()) {
@@ -119,8 +115,8 @@ void handleCommand(byte cmd) {
 }
 
 void sendDataToBus() {
-  SB_SERIAL_OUTPUT();
-  SB_SERIAL_TXB_LOW();
+  SB_SERIAL_OUTPUT;
+  SB_SERIAL_TXB_LOW;
   _delay_ms(50);
   
   busSerial.listen();
@@ -131,7 +127,7 @@ void sendDataToBus() {
   
   _delay_ms(15);
   
-  SB_SERIAL_HIGH_Z();
+  SB_SERIAL_HIGH_Z;
   
-  ctrSerial.listen();
+  ctrSerial.listen;
 }

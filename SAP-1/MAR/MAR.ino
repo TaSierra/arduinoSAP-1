@@ -2,29 +2,27 @@
 #include <util/delay.h>
 #include <NeoSWSerial.h>
 
-#define RXC 3   //RX_Command
-#define TXC 4   //TX_Command
-#define RXB 5   //RX_Bus
-#define TXB 6   //TX_Bus
+#define RXC PD3   //RX_Command
+#define TXC PD4   //TX_Command
+#define RXB PD5   //RX_Bus
+#define TXB PD6   //TX_Bus
 
 #define SB_SERIAL_HIGH_Z \
-    DDRB  &= ~((1 << TXB) | (1 << RXB)); \
-    PORTB &= ~((1 << TXB) | (1 << RXB));
+    DDRD  &= ~((1 << TXB) | (1 << RXB)); \
+    PORTD &= ~((1 << TXB) | (1 << RXB));
 
 #define SB_SERIAL_OUTPUT \
-    DDRB  |= ((1 << TXB) | (1 << RXB)); \
-    PORTB &= ~((1 << TXB) | (1 << RXB));
-
+    DDRD  |= ((1 << TXB) | (1 << RXB)); \
+    PORTD &= ~((1 << TXB) | (1 << RXB));
 
 
 #define SC_SERIAL_HIGH_Z \
-    DDRC  &= ~((1 << )); \
-    PORTC &= ~((1 << ));
+    DDRD  &= ~((1 << TXC) | (1 << RXC)); \
+    PORTD &= ~((1 << TXC) | (1 << RXC));
 
 #define SC_SERIAL_OUTPUT \
-    DDRC  |= ((1 << TXC) | (1 << RXC)); \
-    PORTC &= ~((1 << TXC) | (1 << RXC));
-
+    DDRD  |= ((1 << TXC) | (1 << RXC)); \
+    PORTD &= ~((1 << TXC) | (1 << RXC));
 
 
 #define H_SERIAL_HIGH_Z \

@@ -1,21 +1,53 @@
-/*
- * B Register
- */
+#include <avr/io.h>
+#include <util/delay.h>
 #include <NeoSWSerial.h>
 
-int RXB = 5;
-int TXB = 6;
-int RXC = 3;
-int TXC = 4;
-int RXA = 7;
-int TXA = 8;
+#define RXB  PD5
+#define TXB  PD6
+#define RXC  PD3
+#define TXC  PD4
+#define RXA  PD7 //ALU RX
+#define TXA  PB0 //ALU TX
+
+#define SB_SERIAL_HIGH_Z \
+    DDRD  &= ~((1 << TXB) | (1 << RXB)); \
+    PORTD &= ~((1 << TXB) | (1 << RXB));
+
+#define SB_SERIAL_OUTPUT \
+    DDRD  |= ((1 << TXB) | (1 << RXB)); \
+    PORTD &= ~((1 << TXB) | (1 << RXB));
+
+#define SB_SERIAL_TXB_LOW PORTD &= ~(1 << TXB);
+
+
+#define SC_SERIAL_HIGH_Z \
+    DDRD  &= ~((1 << TXC) | (1 << RXC)); \
+    PORTD &= ~((1 << RXC) | (1 << TXC));
+
+#define SA_SERIAL_OUTPUT \
+    DDRD |= (1 << RXA); \
+    DDRB |= (1 << TXA);
+    PORTD &= ~(1 << RXA);
+    PORTB &= ~(1 << TXA);
+
+#define H_SERIAL_HIGH_Z \
+    DDRD  &= ~((1 << PD1) | (1 << PD0)); \
+    PORTD &= ~((1 << PD1) | (1 << PD0));
+
+#define H_SERIAL_OUTPUT \
+    DDRD  |= ((1 << PD1) | (1 << PD0)); \
+    PORTD &= ~((1 << PD1) | (1 << PD0));
+
+#define LED_OUTPUT DDRB |= (1 << 5);
+#define LED_HIGH  PORTB |= (1 << 5);
+#define LED_LOW   PORTB &= ~(1 << 5);
 
 NeoSWSerial busSerial(RXB, TXB);
 NeoSWSerial ctrSerial(RXC, TXC);
 NeoSWSerial bSerial(RXA, TXA);
 
-const byte CMD_RAM_TO_B   0b00000111;
-const byte CMD_B_TO_ALU   0b00011100;
+#define CMD_RAM_TO_B   0b00000111
+#define CMD_B_TO_ALU   0b00011100
 
 byte bValue = 0b00000000;
 
@@ -24,10 +56,9 @@ void setup() {
   ctrSerial.begin(19200);
   bSerial.begin(19200);
   
-  pinMode(13, OUTPUT);
-  pinMode(RXB, INPUT);
-  pinMode(TXB, INPUT);
-  pinMode(TXC, INPUT);
+  LED_OUTPUT();
+  SB_SERIAL_HIGH_Z();
+  SC_SERIAL_HIGH_Z();
   pinMode(RXA, INPUT);
   pinMode(TXA, INPUT);
   
