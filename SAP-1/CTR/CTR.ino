@@ -1,7 +1,3 @@
-/*
- * CTR: Controller & Sequencer
- */
-
 #include <NeoSWSerial.h>
 #include <avr/io.h>
 #include <util/delay.h>
@@ -63,8 +59,8 @@ void setup() {
   ctrSerial.begin(19200);
 
   DDRD &= ~(1 << CLKpin);
-  S_SERIAL_HIGH_Z();
-  LED_OUTPUT();
+  S_SERIAL_HIGH_Z;
+  LED_OUTPUT;
 
   _delay_ms(100);
   lastCLK = PIND & (1 << CLKpin);
@@ -76,9 +72,9 @@ void loop() {
     nextInputOP = (opcode >> 4) & 0b00001111;
 
     if(opcode == 0b0011){
-      LED_HIGH();
+      LED_HIGH;
       _delay_ms(100);
-      LED_LOW();
+      LED_LOW;
     }
   }
 
@@ -151,7 +147,7 @@ bool ADDcycle(byte step) {
 }
 
 void sendCommand(byte cmd) {
-  S_SERIAL_OUTPUT();
+  S_SERIAL_OUTPUT;
 
   //_delay_ms(5);
 
@@ -163,6 +159,6 @@ void sendCommand(byte cmd) {
 
   _delay_ms(15);
 
-  S_SERIAL_HIGH_Z();
+  S_SERIAL_HIGH_Z;
   _delay_ms(5);
 }

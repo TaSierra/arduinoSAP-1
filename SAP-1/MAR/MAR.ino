@@ -2,28 +2,26 @@
 #include <util/delay.h>
 #include <NeoSWSerial.h>
 
-#define RXC PD3   //RX_Command
-#define TXC PD4   //TX_Command
-#define RXB PD5   //RX_Bus
-#define TXB PD6   //TX_Bus
+#define RXC 3   //RX_Command
+#define TXC 4   //TX_Command
+#define RXB 5   //RX_Bus
+#define TXB 6   //TX_Bus
 
 #define SB_SERIAL_HIGH_Z \
-    DDRD  &= ~((1 << TXB) | (1 << RXB)); \
-    PORTD &= ~((1 << TXB) | (1 << RXB));
+    DDRB  &= ~((1 << TXB) | (1 << RXB)); \
+    PORTB &= ~((1 << TXB) | (1 << RXB));
 
 #define SB_SERIAL_OUTPUT \
-    DDRD  |= ((1 << TXB) | (1 << RXB)); \
-    PORTD &= ~((1 << TXB) | (1 << RXB));
-
+    DDRB  |= ((1 << TXB) | (1 << RXB)); \
+    PORTB &= ~((1 << TXB) | (1 << RXB));
 
 #define SC_SERIAL_HIGH_Z \
     DDRD  &= ~((1 << TXC) | (1 << RXC)); \
     PORTD &= ~((1 << TXC) | (1 << RXC));
 
 #define SC_SERIAL_OUTPUT \
-    DDRD  |= ((1 << TXC) | (1 << RXC)); \
-    PORTD &= ~((1 << TXC) | (1 << RXC));
-
+    DDRC  |= ((1 << TXC) | (1 << RXC)); \
+    PORTC &= ~((1 << TXC) | (1 << RXC));
 
 #define H_SERIAL_HIGH_Z \
     DDRD  &= ~((1 << PD1) | (1 << PD0)); \
@@ -32,6 +30,8 @@
 #define H_SERIAL_OUTPUT \
     DDRD  |= ((1 << PD1) | (1 << PD0)); \
     PORTD &= ~((1 << PD1) | (1 << PD0));
+
+
 
 #define LED_OUTPUT DDRB |= (1 << 5);
 #define LED_HIGH  PORTB |= (1 << 5);
@@ -51,12 +51,12 @@ void setup() {
   busSerial.begin(19200);
   ctrSerial.begin(19200);
 
-  LED_OUTPUT();
+  LED_OUTPUT;
 
   SB_SERIAL_HIGH_Z();
   SC_SERIAL_HIGH_Z();
 
-  LED_LOW();
+  LED_LOW;
 
   ctrSerial.listen();
 }
@@ -95,12 +95,12 @@ void receiveFromBus() {
 
 
       if(marValue == 0b0001) {
-        LED_HIGH();
+        LED_HIGH;
 
         sendToRAM();
 
         _delay_ms(500);
-        LED_LOW();
+        LED_LOW;
       } else {
         // 0b0001이 아니면 그냥 전송만 하고 LED는 짧게 (혹은 안 킴)
         sendToRAM();
