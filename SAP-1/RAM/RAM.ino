@@ -1,12 +1,48 @@
-/*
- * Random Access Memory
- */
+#include <avr/io.h>
+#include <util/delay.h>
 #include <NeoSWSerial.h>
 
-int RXC = 3;
-int TXC = 4;
-int RXB = 5;
-int TXB = 6;
+
+
+#define RXC 3   //RX_Command
+#define TXC 4   //TX_Command
+#define RXB 5   //RX_Bus
+#define TXB 6   //TX_Bus
+
+#define SB_SERIAL_HIGH_Z \
+    DDRB  &= ~((1 << TXB) | (1 << RXB)); \
+    PORTB &= ~((1 << TXB) | (1 << RXB));
+
+#define SB_SERIAL_OUTPUT \
+    DDRB  |= ((1 << TXB) | (1 << RXB)); \
+    PORTB &= ~((1 << TXB) | (1 << RXB));
+
+#define SB_SERIAL_TXB_LOW PORTB &= ~(1 << TXB);
+
+
+#define SC_SERIAL_HIGH_Z \
+    DDRC  &= ~((1 << )); \
+    PORTC &= ~((1 << ));
+
+#define SC_SERIAL_OUTPUT \
+    DDRC  |= ((1 << TXC) | (1 << RXC)); \
+    PORTC &= ~((1 << TXC) | (1 << RXC));
+
+
+
+#define H_SERIAL_HIGH_Z \
+    DDRD  &= ~((1 << PD1) | (1 << PD0)); \
+    PORTD &= ~((1 << PD1) | (1 << PD0));
+
+#define H_SERIAL_OUTPUT \
+    DDRD  |= ((1 << PD1) | (1 << PD0)); \
+    PORTD &= ~((1 << PD1) | (1 << PD0));
+
+
+
+#define LED_OUTPUT DDRB |= (1 << 5);
+#define LED_HIGH  PORTB |= (1 << 5);
+#define LED_LOW   PORTB &= ~(1 << 5);
 
 NeoSWSerial busSerial(RXB, TXB);
 NeoSWSerial ctrSerial(RXC, TXC);
@@ -30,9 +66,9 @@ byte ramMemory[16] = {  // 현재 LDA->LDB->ADD 실행구조 구현중. LDA는 �
   0b00000000
 };      //즉 현재 목표는 LDB에서 ADD로 전환하는 것이다. 
 
-const byte CMD_RAM_TO_IR   0b00000100;
-const byte CMD_RAM_TO_A    0b00000110;
-const byte CMD_RAM_TO_B    0b00000111;
+#define CMD_RAM_TO_IR   0b00000100
+#define CMD_RAM_TO_A    0b00000110
+#define CMD_RAM_TO_B    0b00000111
 
 byte dataToSend = 0b00000000;
 
@@ -41,13 +77,12 @@ void setup() {
   busSerial.begin(19200);
   ctrSerial.begin(19200);
 
-  pinMode(13, OUTPUT);
-  pinMode(TXC, INPUT);
-  pinMode(RXB, INPUT);
-  pinMode(TXB, INPUT);
-  pinMode(0, INPUT);
+  LED_OUTPUT();
+  SB_SERIAL_HIGH_Z();
+  SC_SERIAL_HIGH_Z();
+  H_SERIAL_HIGH_Z();
   
-  digitalWrite(13, LOW);
+  LED_LOW();
   ctrSerial.listen();
 }
 
@@ -58,10 +93,10 @@ void loop() {
     if (address >= 16) address = 0;
     
     dataToSend = ramMemory[address];
-    
-    digitalWrite(13, HIGH);
-    delay(200);
-    digitalWrite(13, LOW);
+
+    LED_HIGH();
+    _delay_ms(200);
+    LED_LOW();
   }
   
   if (ctrSerial.available()) {
@@ -84,21 +119,19 @@ void handleCommand(byte cmd) {
 }
 
 void sendDataToBus() {
-  pinMode(TXB, OUTPUT);
-  digitalWrite(TXB, LOW);
-  delay(50);
+  SB_SERIAL_OUTPUT();
+  SB_SERIAL_TXB_LOW();
+  _delay_ms(50);
   
   busSerial.listen();
-  delay(10);
+  _delay_ms(10);
   
   busSerial.write(dataToSend);
   busSerial.flush();
   
-  delay(15);
+  _delay_ms(15);
   
-  digitalWrite(TXB, LOW);
-  delay(5);
-  pinMode(TXB, INPUT);
+  SB_SERIAL_HIGH_Z();
   
   ctrSerial.listen();
 }
